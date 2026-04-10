@@ -16,9 +16,13 @@ WEBUI_PORTS=${WEBUI_PORTS}
 ----------------------------------------------------------------------
 "
 
-# Warn if OTPRAVKARR_SECRET is not set
+# Auto-generate OTPRAVKARR_SECRET if not set
 if [[ -z "${OTPRAVKARR_SECRET:-}" ]]; then
-    echo "WARNING: OTPRAVKARR_SECRET is not set. Sessions will not persist across restarts."
+    echo "WARNING: OTPRAVKARR_SECRET is not set. Generating an ephemeral secret."
+    echo "WARNING: Sessions will not persist across container restarts."
+    echo "WARNING: Set OTPRAVKARR_SECRET to a stable value for persistent sessions."
+    OTPRAVKARR_SECRET="$(openssl rand -base64 32)"
+    printf '%s' "${OTPRAVKARR_SECRET}" > /var/run/s6/container_environment/OTPRAVKARR_SECRET
 fi
 
 # Ensure the data directory exists and has correct ownership
