@@ -21,7 +21,7 @@ if [[ -z "${OTPRAVKARR_SECRET:-}" ]]; then
     echo "WARNING: OTPRAVKARR_SECRET is not set. Generating an ephemeral secret."
     echo "WARNING: Sessions will not persist across container restarts."
     echo "WARNING: Set OTPRAVKARR_SECRET to a stable value for persistent sessions."
-    OTPRAVKARR_SECRET="$(openssl rand -base64 32)"
+    OTPRAVKARR_SECRET="$(head -c 32 /dev/urandom | base64)"
     printf '%s' "${OTPRAVKARR_SECRET}" > /var/run/s6/container_environment/OTPRAVKARR_SECRET
 fi
 
