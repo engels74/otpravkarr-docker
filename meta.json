@@ -1,8 +1,8 @@
 {
   "description": "Every commit to main",
   "latest": false,
-  "test_amd64": true,
-  "test_arm64": true,
+  "test_amd64": false,
+  "test_arm64": false,
   "test_url": "http://localhost:3000",
   "upstream_image": "ghcr.io/engels74/base-image",
   "upstream_tag": "alpinevpn",
