@@ -23,13 +23,39 @@ WEBUI_PORTS=${WEBUI_PORTS}
 ----------------------------------------------------------------------
 "
 
-# Auto-generate OTPRAVKARR_SECRET if not set
+# Require OTPRAVKARR_SECRET — refuse to run without it.
+# A missing secret is a data-destroying misconfiguration: AES-GCM keys for
+# encrypted config (plex_admin_token, dispatcharr_api_key) and per-user
+# Xtream passwords are derived from it. Regenerating it on every boot
+# renders every previously-encrypted row permanently unreadable.
 if [[ -z "${OTPRAVKARR_SECRET:-}" ]]; then
-    echo "WARNING: OTPRAVKARR_SECRET is not set. Generating an ephemeral secret."
-    echo "WARNING: Sessions will not persist across container restarts."
-    echo "WARNING: Set OTPRAVKARR_SECRET to a stable value for persistent sessions."
-    OTPRAVKARR_SECRET="$(head -c 32 /dev/urandom | base64)"
-    printf '%s' "${OTPRAVKARR_SECRET}" > /var/run/s6/container_environment/OTPRAVKARR_SECRET
+    cat <<'EOF' >&2
+========================================
+ERROR: OTPRAVKARR_SECRET is not set.
+========================================
+This environment variable is required and must be a STABLE value
+of at least 32 characters that persists across container restarts.
+
+If it changes, all encrypted configuration (Plex admin token,
+Dispatcharr API key) and per-user credentials become unrecoverable.
+
+Generate one with:
+    openssl rand -base64 48
+
+Then add to your compose file (example):
+    environment:
+      - OTPRAVKARR_SECRET=<paste value here>
+
+Or use an env_file outside version control.
+========================================
+EOF
+    exit 1
+fi
+
+if (( ${#OTPRAVKARR_SECRET} < 32 )); then
+    echo "ERROR: OTPRAVKARR_SECRET is too short (${#OTPRAVKARR_SECRET} chars, need >= 32)." >&2
+    echo "Generate a new one with: openssl rand -base64 48" >&2
+    exit 1
 fi
 
 # Ensure the data directory exists and has correct ownership
