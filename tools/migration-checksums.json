@@ -1,0 +1,6 @@
+{
+  "004_event_membership_state.sql": "39fa5e2ab83b2ed34b57549f40fabb86400f17f6c38dd730f1389358dc78701d",
+  "002_channel_group_subscriptions.sql": "75911cd610204b9e7b39b4622a6c12ed6f82b6074409fc769572efa88b8d949a",
+  "001_initial.sql": "314132583ce34159eab36ad9f1dca15f42a8f0ded4d0b5531548eefc10cba26f",
+  "003_lineup_policies.sql": "430995580dcbea3f26342c11f28b6dca9a02b13aef4555e127084106e28b94f2"
+}

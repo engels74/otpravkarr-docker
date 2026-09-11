@@ -1,8 +1,8 @@
 # Otpravkarr Docker Image (Nightly)
 
-Nightly builds from the latest commit on `main`.
+Nightly images use a reviewed, pinned application revision and pass native amd64/arm64 runtime validation before manual publication.
 
-For full documentation, see the [release branch](https://github.com/engels74/otpravkarr-docker/tree/release).
+Documentation: [web.edb.fi](https://web.edb.fi/containers/otpravkarr/). The inactive release branch is preserved; no stable source tag has been selected.
 
 ## Environment Variables
 
@@ -24,3 +24,9 @@ Then provide it via your compose file or an env file kept outside version contro
 environment:
   - OTPRAVKARR_SECRET=<paste value here>
 ```
+
+## Validation and publication
+
+Both architectures use pinned Bun and native base-image digests, a checksummed application source archive, the existing Hotio/s6 layout and persistent `/config` data. CI checks secret rejection, setup/health, exact SQL migration bytes, encrypted persistence across restart/replacement, a missing configured database, and clean shutdown. Live Plex/Dispatcharr connections are not exercised.
+
+Publication is manual from the matching nightly revision after full final CI. It publishes only tested archives and rejects stale workflow/branch revisions or failed runtime evidence. Legacy release/update workflows remain disabled.
